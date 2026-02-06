@@ -14,15 +14,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="inline-block px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
-            Staff Portal v1.0
-          </div>
-          <h1 className="text-5xl font-black tracking-tighter sm:text-6xl">
+        <div className="space-y-3">
+          <h1 className="text-3xl font-bold tracking-tight">
             Training <span className="text-orange-600">Manual</span>
           </h1>
-          <p className="text-stone-500 dark:text-stone-400 text-base max-w-[320px] mx-auto font-medium leading-relaxed">
-            Master the art of service with our essential guide for restaurant professionals.
+          <p className="text-stone-500 dark:text-stone-400 text-sm max-w-[280px] mx-auto font-medium leading-relaxed italic">
+            A comprehensive guide for service excellence.
           </p>
         </div>
       </header>
@@ -30,10 +27,7 @@ export default function Home() {
       {/* Modules Selection */}
       <section className="p-6 pb-16 space-y-6 bg-white dark:bg-stone-900 rounded-t-[40px] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] border-t border-stone-100 dark:border-stone-800">
         <div className="max-w-md mx-auto space-y-4">
-          <div className="flex items-center justify-between px-2 mb-2">
-            <h3 className="text-xl font-bold tracking-tight">Modules</h3>
-            <span className="text-[10px] font-bold text-stone-400 uppercase">Available Now</span>
-          </div>
+
 
           <Link href="/menu" className="block group">
             <Card className="flex items-center p-5 bg-stone-50 dark:bg-stone-800/50 border-stone-200/60 dark:border-stone-700/50 hover:bg-white dark:hover:bg-stone-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">

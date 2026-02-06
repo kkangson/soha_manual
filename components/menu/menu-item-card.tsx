@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { JsonMenuItem } from '@/types/menu';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { guessSettings } from '@/lib/menu';
+import { guessSettings } from '@/lib/menu-client';
 
 interface MenuItemCardProps {
     item: JsonMenuItem;
@@ -23,7 +23,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                     src={imageUrl}
                     alt={item.name}
                     fill
-                    className="object-cover transition-transform duration-700 hover:scale-105"
+                    className="object-cover"
                     sizes="(max-width: 640px) 100vw, 512px"
                     priority={item.name === 'Bulgogi'} // Heuristic for early items
                 />
@@ -40,21 +40,23 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                 </div>
 
                 {/* Table Setting Section */}
-                <div className="p-3 bg-stone-50 dark:bg-stone-800/50 rounded-xl space-y-2">
-                    <div className="flex justify-between items-center px-1">
-                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Essential Setting</h4>
+                {settings.length > 0 && (
+                    <div className="p-3 bg-stone-50 dark:bg-stone-800/50 rounded-xl space-y-2">
+                        <div className="flex justify-between items-center px-1">
+                            <h4 className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Table Setting</h4>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {settings.map((set, idx) => (
+                                <span
+                                    key={idx}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200/50 dark:border-stone-700 shadow-sm"
+                                >
+                                    {set}
+                                </span>
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-1.5">
-                        {settings.map((set, idx) => (
-                            <span
-                                key={idx}
-                                className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200/50 dark:border-stone-700 shadow-sm"
-                            >
-                                {set}
-                            </span>
-                        ))}
-                    </div>
-                </div>
+                )}
 
                 {/* Attributes Section */}
                 {(item.attributes || item.note) && (

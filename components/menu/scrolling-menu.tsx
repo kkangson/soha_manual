@@ -1,0 +1,131 @@
+'use client';
+
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import Link from 'next/link';
+import { ArrowLeft, Filter } from 'lucide-react';
+import { MenuData } from '@/types/menu';
+import { MenuItemCard } from '@/components/menu/menu-item-card';
+import { guessSettings } from '@/lib/menu-client';
+
+interface ScrollingMenuProps {
+    data: MenuData;
+}
+
+export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
+    const [onlyWithSettings, setOnlyWithSettings] = useState(false);
+    const [activeCategory, setActiveCategory] = useState<string>(Object.keys(data.menu)[0]);
+    const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+    // Filtered data based on toggle
+    const filteredMenu = useMemo(() => {
+        if (!onlyWithSettings) return data.menu;
+
+        const filtered: Record<string, any[]> = {};
+        Object.entries(data.menu).forEach(([category, items]) => {
+            const itemsWithSettings = items.filter(item => guessSettings(item).length > 0);
+            if (itemsWithSettings.length > 0) {
+                filtered[category] = itemsWithSettings;
+            }
+        });
+        return filtered;
+    }, [data.menu, onlyWithSettings]);
+
+    useEffect(() => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-10% 0px -85% 0px',
+            threshold: 0,
+        };
+
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveCategory(entry.target.id);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        Object.values(sectionRefs.current).forEach((section) => {
+            if (section) observer.observe(section);
+        });
+
+        return () => observer.disconnect();
+    }, [filteredMenu]);
+
+    return (
+        <div className="flex flex-col min-h-screen bg-stone-50 dark:bg-stone-950 pb-12">
+            {/* Sticky Navbar with Dynamic Category & Toggle */}
+            <nav className="sticky top-0 z-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border-b border-stone-200 dark:border-stone-800 px-4 py-4 flex items-center justify-between shadow-sm">
+                <div className="flex items-center flex-1">
+                    <Link
+                        href="/"
+                        className="p-2 -ml-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-full transition-all active:scale-90"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </Link>
+                    <div className="ml-3 overflow-hidden">
+                        <p className="text-[10px] font-bold text-orange-600 uppercase tracking-[0.2em] leading-none mb-1">
+                            {data.restaurant}
+                        </p>
+                        <h1 className="font-black text-xl leading-none transition-all duration-300 transform translate-y-0 opacity-100 uppercase tracking-tighter truncate max-w-[180px]">
+                            {activeCategory}
+                        </h1>
+                    </div>
+                </div>
+
+                {/* Filter Toggle */}
+                <button
+                    onClick={() => setOnlyWithSettings(!onlyWithSettings)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 active:scale-95 ${onlyWithSettings
+                        ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-600/20'
+                        : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300'
+                        }`}
+                >
+                    <span className="text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+                        Settings Only
+                    </span>
+                </button>
+            </nav>
+
+            {/* Menu Content */}
+            <main className="p-0 space-y-0 w-full">
+                {Object.entries(filteredMenu).map(([category, items]) => (
+                    <section
+                        key={category}
+                        id={category}
+                        ref={(el) => { sectionRefs.current[category] = el; }}
+                        className="scroll-mt-20"
+                    >
+                        <div className="flex flex-col bg-stone-100 dark:bg-stone-800">
+                            {items.map((item, idx) => (
+                                <MenuItemCard
+                                    key={`${category}-${item.name}-${idx}`}
+                                    item={item}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                ))}
+
+                {Object.keys(filteredMenu).length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20 px-8 text-center space-y-4">
+                        <div className="w-16 h-16 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center text-stone-300 dark:text-stone-600">
+                            <Filter className="w-8 h-8" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-stone-400">No items with table settings</p>
+                            <button
+                                onClick={() => setOnlyWithSettings(false)}
+                                className="text-orange-600 text-sm font-bold mt-2 underline"
+                            >
+                                Clear filter
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </main>
+        </div>
+    );
+};
