@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  transpilePackages: ['graffle', 'effect', '@effect/platform', '@wollybeard/kit'],
 };
 
 export default nextConfig;
