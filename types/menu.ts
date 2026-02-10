@@ -1,33 +1,32 @@
-export type MenuCategory = 'STAPLES' | 'SIDES' | 'ADD-ONS' | 'DRINKS' | string;
 
 export interface JsonMenuItem {
+    id?: string;
     name: string;
     name_ko: string;
     price: number;
     attributes?: string[];
+    table_settings?: string[];
+    image?: string;
     note?: string;
 }
 
 export interface MenuData {
     restaurant: string;
     currency: string;
-    menu: Record<MenuCategory, JsonMenuItem[]>;
+    menu: Record<string, JsonMenuItem[]>;
 }
 
-export type TableSettingKey =
-    | "큰 불판"
-    | "작은 불판"
-    | "집게"
-    | "국자"
-    | "숟가락"
-    | "가위"
-    | "뼈버리는 통"
-    | "국그릇";
-
-export interface SettingIcon {
-    icon: React.ElementType;
-    label: string;
-    color: string;
+export interface HygraphMenuItem {
+    id: string;
+    name: string;
+    name_ko: string;
+    price: number;
+    image?: { url: string };
+    table_setting: { name: string }[];
+    attribute: { name: string }[];
 }
 
-export type SettingIconsMap = Record<TableSettingKey, SettingIcon>;
+export interface HygraphCategory {
+    name: string;
+    items: HygraphMenuItem[];
+}

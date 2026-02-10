@@ -1,33 +1,40 @@
 import React from 'react';
 import Image from 'next/image';
 import { JsonMenuItem } from '@/types/menu';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { guessSettings } from '@/lib/menu-client';
+import { ImageOff } from 'lucide-react';
 
 interface MenuItemCardProps {
     item: JsonMenuItem;
 }
 
 export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
-    const settings = guessSettings(item);
-
-    // Placeholder image logic with a more stable fallback
-    const imageUrl = `https://images.unsplash.com/photo-1580651315530-69c8e0026377?auto=format&fit=crop&w=800&q=80`;
+    const settings = item.table_settings || [];
 
     return (
         <div className="flex flex-col bg-white dark:bg-stone-900 overflow-hidden">
             {/* Image (Square like Instagram) */}
             <div className="relative aspect-square w-full overflow-hidden">
-                <Image
-                    src={imageUrl}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 512px"
-                    priority={item.name === 'Bulgogi'} // Heuristic for early items
-                />
-                <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-white text-sm font-bold border border-white/10 shadow-lg">
+                {item.image ? (
+                    <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 512px"
+                        priority={item.name.toLowerCase().includes('bulgogi')}
+                    />
+                ) : (
+                    <div className="w-full h-full bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center p-8 text-center">
+                        <div className="w-16 h-16 bg-white dark:bg-stone-700 rounded-full flex items-center justify-center shadow-sm mb-4">
+                            <ImageOff className="w-7 h-7 text-stone-300 dark:text-stone-500" />
+                        </div>
+                        <p className="text-[10px] font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em]">
+                            Photo coming soon
+                        </p>
+                    </div>
+                )}
+                <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-sm font-bold border border-white/20 shadow-xl">
                     ${item.price}
                 </div>
             </div>
@@ -35,7 +42,20 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
             {/* Content (Caption area) */}
             <div className="p-4 space-y-4">
                 <div className="space-y-1">
-                    <h2 className="text-xl font-bold tracking-tight">{item.name_ko}</h2>
+                    <div className="flex items-center flex-wrap gap-2">
+                        <h2 className="text-xl font-bold tracking-tight">{item.name_ko}</h2>
+                        <div className="flex flex-wrap gap-1.5">
+                            {item.attributes?.map(attr => (
+                                <Badge
+                                    key={attr}
+                                    variant={attr.toLowerCase() === 'spicy' ? 'spicy' : attr.toLowerCase() === 'vegetarian' ? 'vegetarian' : 'default'}
+                                    className="px-1.5 py-0 text-[9px] uppercase tracking-wider"
+                                >
+                                    {attr}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
                     <h3 className="text-sm font-medium text-stone-500 dark:text-stone-400">{item.name}</h3>
                 </div>
 
@@ -58,22 +78,12 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                     </div>
                 )}
 
-                {/* Attributes Section */}
-                {(item.attributes || item.note) && (
-                    <div className="flex flex-wrap gap-2">
-                        {item.attributes?.map(attr => (
-                            <Badge
-                                key={attr}
-                                variant={attr.toLowerCase() === 'spicy' ? 'spicy' : attr.toLowerCase() === 'vegetarian' ? 'vegetarian' : 'default'}
-                            >
-                                {attr}
-                            </Badge>
-                        ))}
-                        {item.note && (
-                            <Badge variant="info">
-                                {item.note}
-                            </Badge>
-                        )}
+                {/* Note Section (If any) */}
+                {item.note && (
+                    <div className="px-1">
+                        <Badge variant="info" className="text-[10px]">
+                            {item.note}
+                        </Badge>
                     </div>
                 )}
             </div>

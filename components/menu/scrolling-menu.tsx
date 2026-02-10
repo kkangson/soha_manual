@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ArrowLeft, Filter } from 'lucide-react';
 import { MenuData } from '@/types/menu';
 import { MenuItemCard } from '@/components/menu/menu-item-card';
-import { guessSettings } from '@/lib/menu-client';
 
 interface ScrollingMenuProps {
     data: MenuData;
@@ -22,7 +21,9 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
 
         const filtered: Record<string, any[]> = {};
         Object.entries(data.menu).forEach(([category, items]) => {
-            const itemsWithSettings = items.filter(item => guessSettings(item).length > 0);
+            const itemsWithSettings = items.filter(item =>
+                (item.table_settings && item.table_settings.length > 0)
+            );
             if (itemsWithSettings.length > 0) {
                 filtered[category] = itemsWithSettings;
             }
