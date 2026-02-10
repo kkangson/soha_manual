@@ -189,7 +189,7 @@
     undici "^7.10.0"
     ws "^8.18.2"
 
-"@effect/platform@^0.93.3", "@effect/platform@^0.93.6", "@effect/platform@>=0.90.0 <1.0.0":
+"@effect/platform@^0.93.3", "@effect/platform@^0.93.6", "@effect/platform@^0.93.8", "@effect/platform@>=0.90.0 <1.0.0":
   version "0.93.8"
   resolved "https://registry.npmjs.org/@effect/platform/-/platform-0.93.8.tgz"
   integrity sha512-xTEy6fyTy4ijmFC3afKgtvYtn/JyPoIov4ZSUWJZUv3VeOcUPNGrrqG6IJlWkXs3NhvSywKv7wc1kw3epCQVZw==
