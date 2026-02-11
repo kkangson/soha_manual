@@ -23,6 +23,7 @@ const GET_MENU_LIST_QUERY = `
           attribute {
             name
           }
+          note
         }
       }
     }
@@ -73,7 +74,8 @@ export async function getMenuList(): Promise<MenuData | null> {
         price: item.price,
         image: item.image?.url,
         table_settings: item.table_setting.map(s => s.name),
-        attributes: item.attribute.map(a => a.name)
+        attributes: item.attribute.map(a => a.name),
+        note: item.note
       }));
     });
 

@@ -24,6 +24,7 @@ export interface HygraphMenuItem {
     image?: { url: string };
     table_setting: { name: string }[];
     attribute: { name: string }[];
+    note?: string;
 }
 
 export interface HygraphCategory {

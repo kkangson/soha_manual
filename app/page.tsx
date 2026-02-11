@@ -9,14 +9,14 @@ export default function Home() {
       <header className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-8 max-w-2xl mx-auto">
         <div className="relative">
           <div className="absolute inset-0 bg-orange-500 blur-2xl opacity-20 animate-pulse" />
-          <div className="relative w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="relative w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-lg">
             <BookOpen className="w-12 h-12 text-white" />
           </div>
         </div>
 
         <div className="space-y-3">
           <h1 className="text-3xl font-bold tracking-tight">
-            Training <span className="text-orange-600">Manual</span>
+            SOHA <span className="text-orange-600">Manual</span>
           </h1>
           <p className="text-stone-500 dark:text-stone-400 text-sm max-w-[280px] mx-auto font-medium leading-relaxed italic">
             A comprehensive guide for service excellence.

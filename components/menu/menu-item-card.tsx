@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { JsonMenuItem } from '@/types/menu';
 import { Badge } from '@/components/ui/badge';
-import { ImageOff } from 'lucide-react';
+import { ImageOff, MessageSquare } from 'lucide-react';
 
 interface MenuItemCardProps {
     item: JsonMenuItem;
@@ -10,9 +10,10 @@ interface MenuItemCardProps {
 
 export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
     const settings = item.table_settings || [];
+    const [showNote, setShowNote] = useState(false);
 
     return (
-        <div className="flex flex-col bg-white dark:bg-stone-900 overflow-hidden">
+        <div className="flex flex-col bg-white dark:bg-stone-900 overflow-hidden border-b border-stone-100 dark:border-stone-800">
             {/* Image (Square like Instagram) */}
             <div className="relative aspect-square w-full overflow-hidden">
                 {item.image ? (
@@ -34,7 +35,31 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                         </p>
                     </div>
                 )}
-                <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-sm font-bold border border-white/20 shadow-xl">
+
+                {/* Note Icon - Bottom Left */}
+                {item.note && (
+                    <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+                        <button
+                            onClick={() => setShowNote(!showNote)}
+                            className={`w-9 h-9 backdrop-blur-md rounded-full flex items-center justify-center border transition-all duration-300 shadow-lg ${showNote
+                                ? 'bg-orange-600 border-orange-500 text-white scale-110'
+                                : 'bg-black/60 border-white/20 text-white hover:bg-black/80'}`}
+                            aria-label="Toggle note"
+                        >
+                            <MessageSquare className="w-4 h-4" />
+                        </button>
+                        <div className={`transition-all duration-300 transform origin-left ${showNote
+                            ? 'opacity-100 scale-100 translate-x-0'
+                            : 'opacity-0 scale-95 -translate-x-2 pointer-events-none'}`}>
+                            <div className="bg-black/80 backdrop-blur-md px-4 py-2 rounded-2xl text-white text-[11px] font-medium border border-white/10 shadow-2xl max-w-[200px] leading-relaxed">
+                                {item.note}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Price Label - Bottom Right */}
+                <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-sm font-bold border border-white/20">
                     ${item.price}
                 </div>
             </div>
@@ -75,15 +100,6 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                                 </span>
                             ))}
                         </div>
-                    </div>
-                )}
-
-                {/* Note Section (If any) */}
-                {item.note && (
-                    <div className="px-1">
-                        <Badge variant="info" className="text-[10px]">
-                            {item.note}
-                        </Badge>
                     </div>
                 )}
             </div>

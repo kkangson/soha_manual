@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Staff Training Manual | Restaurant Guide",
+  title: "SOHA Manual",
   description: "Essential training and menu documentation for restaurant staff members.",
 };
 
