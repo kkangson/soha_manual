@@ -23,9 +23,10 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
         const filtered: Record<string, any[]> = {};
         Object.entries(data.menu).forEach(([category, items]) => {
             const filteredItems = items.filter(item => {
-                const matchesSettings = !onlyWithSettings || (item.table_settings && item.table_settings.length > 0);
-                const matchesNotes = !onlyWithNotes || (item.note && item.note.trim().length > 0);
-                return matchesSettings && matchesNotes;
+                const hasSettings = item.table_settings && item.table_settings.length > 0;
+                const hasNotes = item.note && item.note.trim().length > 0;
+
+                return (onlyWithSettings && hasSettings) || (onlyWithNotes && hasNotes);
             });
 
             if (filteredItems.length > 0) {

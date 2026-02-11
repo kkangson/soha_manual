@@ -51,8 +51,14 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                         <div className={`transition-all duration-300 transform origin-left ${showNote
                             ? 'opacity-100 scale-100 translate-x-0'
                             : 'opacity-0 scale-95 -translate-x-2 pointer-events-none'}`}>
-                            <div className="bg-black/80 backdrop-blur-md px-4 py-2 rounded-2xl text-white text-[11px] font-medium border border-white/10 shadow-2xl max-w-[200px] leading-relaxed">
-                                {item.note}
+                            <div className="bg-black/80 backdrop-blur-md px-4 py-2 rounded-2xl text-white text-[11px] font-medium border border-white/10 shadow-2xl max-w-[200px] leading-relaxed whitespace-pre-line">
+                                {item.note.split('∙').map((part, i) => (
+                                    <React.Fragment key={i}>
+                                        {i > 1 && <br />}
+                                        {i > 0 && '∙ '}
+                                        {part.trim()}
+                                    </React.Fragment>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -73,7 +79,12 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                             {item.attributes?.map(attr => (
                                 <Badge
                                     key={attr}
-                                    variant={attr.toLowerCase() === 'spicy' ? 'spicy' : attr.toLowerCase() === 'vegetarian' ? 'vegetarian' : 'default'}
+                                    variant={
+                                        attr.toLowerCase() === 'spicy' ? 'spicy' :
+                                            attr.toLowerCase() === 'vegetarian' ? 'vegetarian' :
+                                                attr.toLowerCase().includes('gluten') || attr.toLowerCase() === 'gf' ? 'glutenfree' :
+                                                    'default'
+                                    }
                                     className="px-1.5 py-0 text-[9px] uppercase tracking-wider"
                                 >
                                     {attr}
