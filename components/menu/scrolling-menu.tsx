@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Filter } from 'lucide-react';
+import { ArrowLeft, Filter, Utensils, MessageSquare } from 'lucide-react';
 import { MenuData } from '@/types/menu';
 import { MenuItemCard } from '@/components/menu/menu-item-card';
 
@@ -12,24 +12,28 @@ interface ScrollingMenuProps {
 
 export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
     const [onlyWithSettings, setOnlyWithSettings] = useState(false);
+    const [onlyWithNotes, setOnlyWithNotes] = useState(false);
     const [activeCategory, setActiveCategory] = useState<string>(Object.keys(data.menu)[0]);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-    // Filtered data based on toggle
+    // Filtered data based on toggles
     const filteredMenu = useMemo(() => {
-        if (!onlyWithSettings) return data.menu;
+        if (!onlyWithSettings && !onlyWithNotes) return data.menu;
 
         const filtered: Record<string, any[]> = {};
         Object.entries(data.menu).forEach(([category, items]) => {
-            const itemsWithSettings = items.filter(item =>
-                (item.table_settings && item.table_settings.length > 0)
-            );
-            if (itemsWithSettings.length > 0) {
-                filtered[category] = itemsWithSettings;
+            const filteredItems = items.filter(item => {
+                const matchesSettings = !onlyWithSettings || (item.table_settings && item.table_settings.length > 0);
+                const matchesNotes = !onlyWithNotes || (item.note && item.note.trim().length > 0);
+                return matchesSettings && matchesNotes;
+            });
+
+            if (filteredItems.length > 0) {
+                filtered[category] = filteredItems;
             }
         });
         return filtered;
-    }, [data.menu, onlyWithSettings]);
+    }, [data.menu, onlyWithSettings, onlyWithNotes]);
 
     useEffect(() => {
         const observerOptions = {
@@ -76,18 +80,32 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
                     </div>
                 </div>
 
-                {/* Filter Toggle */}
-                <button
-                    onClick={() => setOnlyWithSettings(!onlyWithSettings)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 active:scale-95 ${onlyWithSettings
-                        ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-600/20'
-                        : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300'
-                        }`}
-                >
-                    <span className="text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
-                        Settings Only
-                    </span>
-                </button>
+                {/* Filter Toggles */}
+                <div className="flex items-center gap-2">
+                    {/* Notes Filter */}
+                    <button
+                        onClick={() => setOnlyWithNotes(!onlyWithNotes)}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-300 active:scale-90 ${onlyWithNotes
+                            ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-600/20'
+                            : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300'
+                            }`}
+                        title="Filter items with notes"
+                    >
+                        <MessageSquare className="w-4 h-4" />
+                    </button>
+
+                    {/* Settings Filter */}
+                    <button
+                        onClick={() => setOnlyWithSettings(!onlyWithSettings)}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-300 active:scale-90 ${onlyWithSettings
+                            ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-600/20'
+                            : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300'
+                            }`}
+                        title="Filter items with table settings"
+                    >
+                        <Utensils className="w-4 h-4" />
+                    </button>
+                </div>
             </nav>
 
             {/* Menu Content */}
@@ -116,12 +134,15 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
                             <Filter className="w-8 h-8" />
                         </div>
                         <div>
-                            <p className="font-bold text-stone-400">No items with table settings</p>
+                            <p className="font-bold text-stone-400">No items match your filters</p>
                             <button
-                                onClick={() => setOnlyWithSettings(false)}
+                                onClick={() => {
+                                    setOnlyWithSettings(false);
+                                    setOnlyWithNotes(false);
+                                }}
                                 className="text-orange-600 text-sm font-bold mt-2 underline"
                             >
-                                Clear filter
+                                Clear all filters
                             </button>
                         </div>
                     </div>
