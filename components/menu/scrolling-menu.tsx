@@ -39,7 +39,7 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: '-10% 0px -85% 0px',
+            rootMargin: '-90px 0px -80% 0px', // Detect elements in a strip near the top
             threshold: 0,
         };
 
@@ -83,6 +83,8 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
                             const element = sectionRefs.current[nextCategory];
                             if (element) {
                                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                // Immediate feedback for state
+                                setActiveCategory(nextCategory);
                             }
                         }}
                         className="ml-3 flex flex-col items-start flex-1 h-full py-1 cursor-pointer group transition-all text-left outline-none min-w-[140px]"
