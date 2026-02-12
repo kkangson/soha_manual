@@ -71,14 +71,29 @@ export const ScrollingMenu: React.FC<ScrollingMenuProps> = ({ data }) => {
                     >
                         <ArrowLeft className="w-6 h-6" />
                     </Link>
-                    <div className="ml-3 overflow-hidden">
+                    <button
+                        onClick={() => {
+                            const categories = Object.keys(filteredMenu);
+                            if (categories.length <= 1) return;
+
+                            const currentIndex = categories.indexOf(activeCategory);
+                            const nextIndex = (currentIndex + 1) % categories.length;
+                            const nextCategory = categories[nextIndex];
+
+                            const element = sectionRefs.current[nextCategory];
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }}
+                        className="ml-3 flex flex-col items-start flex-1 h-full py-1 cursor-pointer group transition-all text-left outline-none min-w-[140px]"
+                    >
                         <p className="text-[10px] font-bold text-orange-600 uppercase tracking-[0.2em] leading-none mb-1">
                             {data.restaurant}
                         </p>
-                        <h1 className="font-black text-xl leading-none transition-all duration-300 transform translate-y-0 opacity-100 uppercase tracking-tighter truncate max-w-[180px]">
+                        <h1 className="font-black text-xl leading-none uppercase tracking-tighter truncate max-w-[200px] group-hover:text-orange-600 transition-colors duration-300">
                             {activeCategory}
                         </h1>
-                    </div>
+                    </button>
                 </div>
 
                 {/* Filter Toggles */}
