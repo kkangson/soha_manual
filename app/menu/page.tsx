@@ -4,7 +4,6 @@ import { ScrollingMenu } from "@/components/menu/scrolling-menu";
 export default async function MenuPage() {
     const data = await getMenuList();
 
-    console.log(data)
     if (!data) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
