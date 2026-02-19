@@ -1,22 +1,28 @@
+// Import necessary tools and icons for building a menu card
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { JsonMenuItem } from '@/types/menu';
 import { Badge } from '@/components/ui/badge';
 import { ImageOff, MessageSquare } from 'lucide-react';
 
+// This defines the "ingredients" (information) needed to create one menu card
 interface MenuItemCardProps {
     item: JsonMenuItem;
 }
 
+// This function builds a single "Card" for one menu item (like a dish)
 export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
+    // We check for table setting instructions (like spoons or napkins)
     const settings = item.table_settings || [];
+    // This is a switch (state) to show or hide the special note/description
     const [showNote, setShowNote] = useState(false);
 
     return (
         <div className="flex flex-col bg-white dark:bg-stone-900 overflow-hidden border-b border-stone-100 dark:border-stone-800">
-            {/* Image (Square like Instagram) */}
+            {/* The Image section: A square box for the dish photo */}
             <div className="relative aspect-square w-full overflow-hidden">
                 {item.image ? (
+                    // If there is a photo, show it
                     <Image
                         src={item.image}
                         alt={item.name}
@@ -26,6 +32,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                         priority={item.name.toLowerCase().includes('bulgogi')}
                     />
                 ) : (
+                    // If there is no photo, show a "Photo coming soon" message
                     <div className="w-full h-full bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center p-8 text-center">
                         <div className="w-16 h-16 bg-white dark:bg-stone-700 rounded-full flex items-center justify-center shadow-sm mb-4">
                             <ImageOff className="w-7 h-7 text-stone-300 dark:text-stone-500" />
@@ -36,7 +43,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                     </div>
                 )}
 
-                {/* Note Icon - Bottom Left */}
+                {/* The Note button: A small speech bubble to read more about the dish (bottom left) */}
                 {item.note && (
                     <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
                         <button
@@ -48,6 +55,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                         >
                             <MessageSquare className="w-4 h-4" />
                         </button>
+                        {/* The actual note content that appears when you click the button */}
                         <div className={`transition-all duration-300 transform origin-left ${showNote
                             ? 'opacity-100 scale-100 translate-x-0'
                             : 'opacity-0 scale-95 -translate-x-2 pointer-events-none'}`}>
@@ -64,17 +72,19 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                     </div>
                 )}
 
-                {/* Price Label - Bottom Right */}
+                {/* The Price label: Displays the cost of the item (bottom right) */}
                 <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-sm font-bold border border-white/20">
                     ${item.price}
                 </div>
             </div>
 
-            {/* Content (Caption area) */}
+            {/* The Text section: Dish names and special tags */}
             <div className="p-4 space-y-4">
                 <div className="space-y-1">
                     <div className="flex items-center flex-wrap gap-2">
+                        {/* The Korean name of the dish (Bold and Large) */}
                         <h2 className="text-xl font-bold tracking-tight">{item.name_ko}</h2>
+                        {/* Tiny colorful tags for spicy, vegetarian, or gluten-free options */}
                         <div className="flex flex-wrap gap-1.5">
                             {item.attributes?.map(attr => (
                                 <Badge
@@ -92,10 +102,11 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
                             ))}
                         </div>
                     </div>
+                    {/* The English name of the dish (Smaller and Gray) */}
                     <h3 className="text-sm font-medium text-stone-500 dark:text-stone-400">{item.name}</h3>
                 </div>
 
-                {/* Table Setting Section */}
+                {/* The "Table Setting" section: Shows what the server needs to prepare for this dish */}
                 {settings.length > 0 && (
                     <div className="p-3 bg-stone-50 dark:bg-stone-800/50 rounded-xl space-y-2">
                         <div className="flex justify-between items-center px-1">

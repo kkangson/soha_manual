@@ -1,9 +1,13 @@
+// Import tools to fetch data and the component that handles the menu view
 import { getMenuList } from "@/lib/actions";
 import { ScrollingMenu } from "@/components/menu/scrolling-menu";
 
+// This function creates the Menu page
 export default async function MenuPage() {
+    // We ask the "kitchen" (our data source) to give us the list of menu items
     const data = await getMenuList();
 
+    // If we couldn't get any information (maybe the internet is down), show an error message
     if (!data) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
@@ -15,5 +19,6 @@ export default async function MenuPage() {
         );
     }
 
+    // If we successfully got the data, we give it to the ScrollingMenu tool to display it
     return <ScrollingMenu data={data} />;
 }
