@@ -10,7 +10,7 @@ const HYGRAPH_TOKEN = process.env.HYGRAPH_PROD_AUTH_TOKEN;
 // This is a "shopping list" (Query) that tells Hygraph exactly what menu details we need
 const GET_MENU_LIST_QUERY = `
     query getMenuList {
-      menuCategories {
+      menuCategories(orderBy: order_ASC) {
         name
         items {
           id
